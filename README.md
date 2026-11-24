@@ -8,7 +8,7 @@ Skrip utilitas ringan untuk membersihkan RAM dan sampah sistem di Ubuntu melalui
 
 ## Cara Instalasi
 ```bash
-git clone https://github.com/aryasatyan666/ubuntu-toolbox
+git clone https://github.com/aryasatyan666/ubuntu-toolbox.git
 cd ubuntu-toolbox
 bash install.sh
 ```
