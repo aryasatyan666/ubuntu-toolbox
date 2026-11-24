@@ -1,0 +1,77 @@
+#!/bin/bash
+
+if [ "$EUID" -ne 0 ]; then
+  exec sudo "$0" "$@"
+fi
+
+while true; do
+  clear
+  echo "======================================================="
+  echo "          UBUNTU TOOLBOX (ALA GHOST SPECTRE)           "
+  echo "======================================================="
+  free -h | awk '/^Mem:/ {print " RAM Terpakai : " $3 " / Total " $2}'
+  df -h / | awk 'NR==2 {print " Disk Root    : Terpakai " $3 " / Total " $2 " (" $5 ")"}'
+  echo "-------------------------------------------------------"
+  echo " CLEANER & MEMORY"
+  echo "     1. Clear RAM Cache (Standby Memory)"
+  echo "     2. Clear RAM + Reset Swap"
+  echo "     3. Auto-Clear RAM (Aktifkan Tiap 30 Menit)"
+  echo "     4. Matikan Auto-Clear RAM"
+  echo "     5. Bersihkan Sampah Sistem & Cache (APT/Journal)"
+  echo ""
+  echo " UTILITAS"
+  echo "     6. Cek Ping Internet (Tes Koneksi)"
+  echo "     7. Update & Upgrade Semua Aplikasi Sekarang"
+  echo "     0. Keluar"
+  echo "======================================================="
+  read -p " Pilih nomor menu [0-7]: " pil
+
+  case $pil in
+    1)
+      sync; echo 3 > /proc/sys/vm/drop_caches
+      echo -e "\n[OK] Cache RAM dibersihkan!"
+      read -p "Tekan Enter..."
+      ;;
+    2)
+      sync; echo 3 > /proc/sys/vm/drop_caches
+      swapoff -a && swapon -a
+      echo -e "\n[OK] Cache RAM dan Swap di-reset!"
+      read -p "Tekan Enter..."
+      ;;
+    3)
+      (crontab -l 2>/dev/null | grep -v "drop_caches"; echo "*/30 * * * * /bin/sync; /bin/echo 3 > /proc/sys/vm/drop_caches") | crontab -
+      echo -e "\n[OK] Auto-Clear RAM tiap 30 menit DIAKTIFKAN!"
+      read -p "Tekan Enter..."
+      ;;
+    4)
+      crontab -l 2>/dev/null | grep -v "drop_caches" | crontab -
+      echo -e "\n[OK] Auto-Clear RAM DIMATIKAN!"
+      read -p "Tekan Enter..."
+      ;;
+    5)
+      echo -e "\nMembersihkan sampah sistem..."
+      apt-get autoremove -y && apt-get autoclean -y && apt-get clean
+      journalctl --vacuum-time=3d
+      echo -e "[OK] Sampah sistem bersih!"
+      read -p "Tekan Enter..."
+      ;;
+    6)
+      echo -e "\nTes ping ke Google (5x)..."
+      ping -c 5 8.8.8.8
+      read -p "Tekan Enter..."
+      ;;
+    7)
+      apt-get update && apt-get upgrade -y
+      echo -e "\n[OK] Sistem dan aplikasi berhasil diperbarui!"
+      read -p "Tekan Enter..."
+      ;;
+    0)
+      clear
+      exit 0
+      ;;
+    *)
+      echo -e "\nPilihan tidak ada!"
+      sleep 1
+      ;;
+  esac
+done
