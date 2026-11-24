@@ -7,7 +7,7 @@ fi
 while true; do
   clear
   echo "======================================================="
-  echo "          UBUNTU TOOLBOX (ALA GHOST SPECTRE)           "
+  echo "                   UBUNTU TOOLBOX                      "
   echo "======================================================="
   free -h | awk '/^Mem:/ {print " RAM Terpakai : " $3 " / Total " $2}'
   df -h / | awk 'NR==2 {print " Disk Root    : Terpakai " $3 " / Total " $2 " (" $5 ")"}'
